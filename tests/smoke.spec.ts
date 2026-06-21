@@ -21,3 +21,9 @@ test("hero shows headline and CTA", async ({ page }) => {
   await expect(page.locator(".hero h1")).toContainText("på nett");
   await expect(page.locator(".hero__cta a")).toHaveText("Er du klar?");
 });
+
+test("services section shows three pillars", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.locator("#tjenester h3")).toHaveCount(3);
+  await expect(page.locator("#tjenester")).toContainText("Google Maps");
+});
