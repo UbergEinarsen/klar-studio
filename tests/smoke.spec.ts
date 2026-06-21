@@ -43,3 +43,8 @@ test("process section shows three steps", async ({ page }) => {
   await page.goto("/");
   await expect(page.locator("#prosess .process__step")).toHaveCount(3);
 });
+
+test("about section shows two founders", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.locator("#om-oss .about__person")).toHaveCount(2);
+});
