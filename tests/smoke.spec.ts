@@ -27,3 +27,8 @@ test("services section shows three pillars", async ({ page }) => {
   await expect(page.locator("#tjenester h3")).toHaveCount(3);
   await expect(page.locator("#tjenester")).toContainText("Google Maps");
 });
+
+test("why section shows the ranking stat", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.locator(".why__num")).toHaveText("#1");
+});
