@@ -32,3 +32,9 @@ test("why section shows the ranking stat", async ({ page }) => {
   await page.goto("/");
   await expect(page.locator(".why__num")).toHaveText("#1");
 });
+
+test("work section shows featured project and demo badges", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.locator(".work__featured")).toBeVisible();
+  await expect(page.locator(".work__badge").first()).toHaveText("Demo");
+});

@@ -1,0 +1,47 @@
+---
+import { projects } from "../data/projects.ts";
+import Reveal from "./Reveal.tsx";
+const featured = projects.find((p) => p.real);
+const demos = projects.filter((p) => !p.real);
+---
+<section id="arbeid">
+  <div class="container">
+    <h2 class="work__title">Arbeid</h2>
+    {featured && (
+      <Reveal client:visible>
+        <a class="work__featured" href={featured.url}>
+          <img src={featured.image} alt={featured.name} loading="lazy" />
+          <div class="work__meta">
+            <h3>{featured.name}</h3>
+            <p>{featured.tagline}</p>
+          </div>
+        </a>
+      </Reveal>
+    )}
+    <div class="work__grid">
+      {demos.map((p, i) => (
+        <Reveal client:visible delay={i * 0.08}>
+          <article class="work__demo">
+            <span class="work__badge">Demo</span>
+            <img src={p.image} alt={p.name} loading="lazy" />
+            <h3>{p.name}</h3>
+            <p>{p.tagline}</p>
+          </article>
+        </Reveal>
+      ))}
+    </div>
+  </div>
+</section>
+<style>
+  .work__title { font-size: var(--step-2); margin-bottom: 2.5rem; }
+  .work__featured { display: grid; gap: 1.5rem; text-decoration: none; margin-bottom: 3rem; }
+  .work__featured img { width: 100%; border-radius: 20px; aspect-ratio: 16/9; object-fit: cover; background: color-mix(in srgb, var(--ink) 6%, transparent); }
+  .work__meta h3 { margin-bottom: 0.5rem; }
+  .work__meta p { color: var(--muted); }
+  .work__grid { display: grid; gap: 1.25rem; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+  .work__demo { position: relative; }
+  .work__demo img { width: 100%; border-radius: 14px; aspect-ratio: 4/3; object-fit: cover; background: color-mix(in srgb, var(--ink) 6%, transparent); }
+  .work__demo h3 { margin: 0.75rem 0 0.25rem; font-size: 1.1rem; }
+  .work__demo p { color: var(--muted); font-size: 0.95rem; }
+  .work__badge { position: absolute; top: 0.75rem; left: 0.75rem; background: var(--lime); color: var(--ink); font-weight: 700; font-size: 0.8rem; padding: 0.2rem 0.6rem; border-radius: 999px; }
+</style>
