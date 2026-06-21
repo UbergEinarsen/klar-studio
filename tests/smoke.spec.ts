@@ -48,3 +48,16 @@ test("about section shows two founders", async ({ page }) => {
   await page.goto("/");
   await expect(page.locator("#om-oss .about__person")).toHaveCount(2);
 });
+
+test("contact form validates required fields", async ({ page }) => {
+  await page.goto("/");
+  // Scroll to contact section to trigger client:visible hydration
+  await page.locator("#kontakt").scrollIntoViewIfNeeded();
+  await page.waitForTimeout(300);
+  const button = page.locator("#kontakt button[type=submit]");
+  await expect(button).toBeVisible();
+  await button.click();
+  await page.waitForTimeout(500);
+  const err = page.locator("#kontakt .form__err");
+  await expect(err.first()).toBeVisible();
+});
