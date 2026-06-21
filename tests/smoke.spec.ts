@@ -61,3 +61,12 @@ test("contact form validates required fields", async ({ page }) => {
   const err = page.locator("#kontakt .form__err");
   await expect(err.first()).toBeVisible();
 });
+
+test("respects reduced motion (content visible without animation)", async ({ browser }) => {
+  const ctx = await browser.newContext({ reducedMotion: "reduce" });
+  const page = await ctx.newPage();
+  await page.goto("/");
+  await expect(page.locator(".hero h1")).toContainText("på nett");
+  await expect(page.locator("#tjenester h3")).toHaveCount(3);
+  await ctx.close();
+});
