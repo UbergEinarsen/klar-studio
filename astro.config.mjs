@@ -4,5 +4,5 @@ import sitemap from "@astrojs/sitemap";
 
 export default defineConfig({
   site: "https://klarstudio.no",
-  integrations: [react(), sitemap({ changefreq: "weekly", priority: 0.7 })],
+  integrations: [react(), sitemap()],
 });
