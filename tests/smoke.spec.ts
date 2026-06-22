@@ -5,7 +5,7 @@ test("homepage loads with correct title and no console errors", async ({ page })
   page.on("console", (m) => m.type() === "error" && errors.push(m.text()));
   await page.goto("/");
   await expect(page).toHaveTitle(/Klar Studio/);
-  await expect(page.locator("h1")).toContainText("Klar,ferdig");
+  await expect(page.locator("h1")).toContainText("Klar, ferdig");
   expect(errors).toEqual([]);
 });
 

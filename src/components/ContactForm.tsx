@@ -39,9 +39,9 @@ export default function ContactForm() {
         <label key={f} className="form__field">
           <span>{f === "name" ? "Navn" : f === "email" ? "E-post" : "Melding"}</span>
           {f === "message" ? (
-            <textarea rows={4} value={values[f]} onChange={(e) => setValues({ ...values, [f]: e.target.value })} />
+            <textarea name={f} rows={4} value={values[f]} onChange={(e) => setValues({ ...values, [f]: e.target.value })} />
           ) : (
-            <input type={f === "email" ? "email" : "text"} value={values[f]} onChange={(e) => setValues({ ...values, [f]: e.target.value })} />
+            <input name={f} type={f === "email" ? "email" : "text"} value={values[f]} onChange={(e) => setValues({ ...values, [f]: e.target.value })} />
           )}
           {errors[f] && <em className="form__err">{errors[f]}</em>}
         </label>
