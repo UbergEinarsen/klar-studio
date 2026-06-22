@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://klarstudio.no/sitemap-index.xml

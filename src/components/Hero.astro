@@ -1,0 +1,18 @@
+---
+import HeroHeadline from "./HeroHeadline.tsx";
+import MagneticButton from "./MagneticButton.tsx";
+---
+<section class="hero">
+  <div class="container">
+    <HeroHeadline client:load />
+    <p class="hero__sub">Vi lager raske nettsider og får lokale bedrifter synlige på Google Maps.</p>
+    <div class="hero__cta">
+      <MagneticButton href="#kontakt" client:load>Er du klar?</MagneticButton>
+    </div>
+  </div>
+</section>
+<style>
+  .hero { padding-block: clamp(5rem, 8vw, 9rem); }
+  .hero__sub { font-size: var(--step-2); color: var(--muted); max-width: 36ch; margin-top: 1.5rem; }
+  .hero__cta { margin-top: 2.5rem; }
+</style>

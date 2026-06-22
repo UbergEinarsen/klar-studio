@@ -1,0 +1,25 @@
+---
+const links = [
+  { href: "#tjenester", label: "Tjenester" },
+  { href: "#arbeid", label: "Arbeid" },
+  { href: "#om-oss", label: "Om oss" },
+];
+---
+<header class="nav">
+  <div class="container nav__inner">
+    <a class="nav__brand" href="#top">Klar Studio</a>
+    <nav class="nav__links">
+      {links.map((l) => <a href={l.href}>{l.label}</a>)}
+      <a class="nav__cta" href="#kontakt">Ta kontakt</a>
+    </nav>
+  </div>
+</header>
+<style>
+  .nav { position: sticky; top: 0; z-index: 50; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid color-mix(in srgb, var(--ink) 10%, transparent); }
+  .nav__inner { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+  .nav__brand { font-weight: 700; letter-spacing: -0.02em; text-decoration: none; }
+  .nav__links { display: flex; align-items: center; gap: clamp(1rem, 2vw, 1.75rem); }
+  .nav__links a { text-decoration: none; }
+  .nav__cta { background: var(--lime); color: var(--ink); padding: 0.5rem 1rem; border-radius: 999px; font-weight: 700; }
+  @media (max-width: 640px) { .nav__links a:not(.nav__cta) { display: none; } }
+</style>

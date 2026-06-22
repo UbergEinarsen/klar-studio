@@ -1,0 +1,27 @@
+---
+import { processSteps } from "../data/process.ts";
+import Reveal from "./Reveal.tsx";
+---
+<section id="prosess">
+  <div class="container">
+    <h2 class="process__title">Slik jobber vi</h2>
+    <div class="process__grid">
+      {processSteps.map((s, i) => (
+        <Reveal client:visible delay={i * 0.08}>
+          <article class="process__step">
+            <span class="process__num">{s.step}</span>
+            <h3>{s.title}</h3>
+            <p>{s.body}</p>
+          </article>
+        </Reveal>
+      ))}
+    </div>
+  </div>
+</section>
+<style>
+  .process__title { font-size: var(--step-2); margin-bottom: 2.5rem; }
+  .process__grid { display: grid; gap: 1.5rem; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+  .process__num { font-weight: 700; color: var(--lime); font-size: 1.5rem; }
+  .process__step h3 { margin: 0.5rem 0; }
+  .process__step p { color: var(--muted); }
+</style>

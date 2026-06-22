@@ -1,0 +1,31 @@
+---
+import { founders } from "../data/founders.ts";
+import Reveal from "./Reveal.tsx";
+---
+<section id="om-oss">
+  <div class="container">
+    <h2 class="about__title">Om oss</h2>
+    <p class="about__lead">To utviklere som brenner for at lokale bedrifter skal lykkes på nett.</p>
+    <div class="about__grid">
+      {founders.map((f, i) => (
+        <Reveal client:visible delay={i * 0.1}>
+          <article class="about__person">
+            <img src={f.photo} alt={f.name} loading="lazy" />
+            <h3>{f.name}</h3>
+            <p class="about__role">{f.role}</p>
+            <p>{f.bio}</p>
+          </article>
+        </Reveal>
+      ))}
+    </div>
+  </div>
+</section>
+<style>
+  .about__title { font-size: var(--step-2); }
+  .about__lead { color: var(--muted); max-width: 40ch; margin: 1rem 0 2.5rem; }
+  .about__grid { display: grid; gap: 2rem; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+  .about__person img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 20px; background: color-mix(in srgb, var(--ink) 6%, transparent); }
+  .about__person h3 { margin: 1rem 0 0.25rem; }
+  .about__role { color: var(--lime); font-weight: 700; }
+  .about__person p:last-child { color: var(--muted); margin-top: 0.5rem; }
+</style>

@@ -1,0 +1,30 @@
+---
+const year = new Date().getFullYear();
+---
+<footer class="footer">
+  <div class="container footer__inner">
+    <div>
+      <p class="footer__brand">Klar Studio</p>
+      <p class="footer__muted">Klar, ferdig — på nett.</p>
+    </div>
+    <div class="footer__col">
+      <a href="#tjenester">Tjenester</a>
+      <a href="#arbeid">Arbeid</a>
+      <a href="#kontakt">Kontakt</a>
+    </div>
+    <div class="footer__col">
+      <a href="mailto:hei@klarstudio.no">hei@klarstudio.no</a>
+      <a href="https://instagram.com/klarstudio">Instagram</a>
+    </div>
+  </div>
+  <p class="container footer__legal">© {year} Klar Studio</p>
+</footer>
+<style>
+  .footer { border-top: 1px solid color-mix(in srgb, var(--ink) 10%, transparent); padding-block: 3rem 2rem; }
+  .footer__inner { display: flex; flex-wrap: wrap; gap: 2rem; justify-content: space-between; }
+  .footer__brand { font-weight: 700; }
+  .footer__muted { color: var(--muted); }
+  .footer__col { display: flex; flex-direction: column; gap: 0.5rem; }
+  .footer__col a { text-decoration: none; }
+  .footer__legal { color: var(--muted); margin-top: 2rem; font-size: 0.875rem; }
+</style>
