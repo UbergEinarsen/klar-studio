@@ -1,0 +1,39 @@
+---
+import Base from "../layouts/Base.astro";
+import Nav from "../components/Nav.astro";
+import Footer from "../components/Footer.astro";
+---
+<Base title="Personvern — Klar Studio" description="Slik behandler Klar Studio personopplysninger fra kontaktskjemaet.">
+  <Nav />
+  <main class="legal container">
+    <h1>Personvern</h1>
+    <p class="legal__lead">Sist oppdatert: juni 2026</p>
+
+    <h2>Hvilke opplysninger vi samler inn</h2>
+    <p>Når du sender inn kontaktskjemaet, lagrer vi navnet, e-postadressen og meldingen du oppgir. Vi samler ikke inn opplysninger utover dette.</p>
+
+    <h2>Hva vi bruker dem til</h2>
+    <p>Opplysningene brukes utelukkende for å svare på henvendelsen din og eventuelt følge opp et samarbeid. Vi selger dem aldri videre.</p>
+
+    <h2>Hvem som behandler dem</h2>
+    <p>Skjemaet sendes via Web3Forms, som videreformidler meldingen til vår e-post. Se <a href="https://web3forms.com/privacy" rel="noopener">Web3Forms' personvernerklæring</a> for hvordan de behandler data underveis.</p>
+
+    <h2>Lagring og sletting</h2>
+    <p>Vi oppbevarer henvendelsen så lenge det er nødvendig for å følge den opp, og sletter den deretter. Du kan når som helst be om innsyn i eller sletting av opplysningene dine ved å kontakte oss.</p>
+
+    <h2>Kontakt</h2>
+    <p>Spørsmål om personvern? Skriv til <a href="mailto:hei@klarstudio.no">hei@klarstudio.no</a>.</p>
+
+    <p class="legal__back"><a href="/">← Tilbake til forsiden</a></p>
+  </main>
+  <Footer />
+</Base>
+<style>
+  .legal { max-width: 70ch; padding-block: clamp(3rem, 8vw, 6rem); }
+  .legal h1 { font-size: var(--step-5); }
+  .legal__lead { color: var(--muted); margin: 0.5rem 0 2.5rem; }
+  .legal h2 { font-size: var(--step-2); margin-top: 2.5rem; }
+  .legal p { margin-top: 0.75rem; color: var(--ink); }
+  .legal a { color: var(--ink); text-decoration: underline; }
+  .legal__back { margin-top: 3rem; }
+</style>

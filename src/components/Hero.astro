@@ -1,18 +1,131 @@
 ---
 import HeroHeadline from "./HeroHeadline.tsx";
-import MagneticButton from "./MagneticButton.tsx";
 ---
 <section class="hero">
-  <div class="container">
-    <HeroHeadline client:load />
-    <p class="hero__sub">Vi lager raske nettsider og får lokale bedrifter synlige på Google Maps.</p>
-    <div class="hero__cta">
-      <MagneticButton href="#kontakt" client:load>Er du klar?</MagneticButton>
-    </div>
+  <div class="hero__bg" aria-hidden="true">
+    <video class="hero__video" autoplay muted loop playsinline preload="metadata"
+      poster="/images/hero-poster.jpg">
+      <source src="/video/hero-loop.mp4" type="video/mp4" />
+    </video>
+    <div class="hero__overlay"></div>
   </div>
+
+  <div class="container hero__content">
+    <p class="hero__eyebrow">
+      <span class="hero__dot" aria-hidden="true"></span>
+      Nettsider &amp; Google Maps · for lokale bedrifter
+    </p>
+    <HeroHeadline client:load />
+    <p class="hero__sub">Vi bygger raske, skarpe nettsider og setter bedriften din øverst på kartet — så de som søker lokalt finner deg først.</p>
+    <div class="hero__cta">
+      <a class="hero__cta-btn" href="#kontakt">
+        <span class="hero__cta-roll">
+          <span>Er du klar?</span>
+          <span aria-hidden="true">Er du klar?</span>
+        </span>
+        <span class="hero__cta-arrow" aria-hidden="true">→</span>
+      </a>
+      <a class="hero__link" href="#arbeid">Se arbeidet <span aria-hidden="true">→</span></a>
+    </div>
+    <p class="hero__trust">Gratis, uforpliktende prat · Lansering på uker, ikke måneder</p>
+  </div>
+
+  <a class="hero__scroll" href="#tjenester" aria-label="Bla ned til tjenester">
+    <span></span>
+  </a>
 </section>
 <style>
-  .hero { padding-block: clamp(5rem, 8vw, 9rem); }
-  .hero__sub { font-size: var(--step-2); color: var(--muted); max-width: 36ch; margin-top: 1.5rem; }
-  .hero__cta { margin-top: 2.5rem; }
+  .hero {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    min-height: min(94vh, 920px);
+    display: flex;
+    align-items: center;
+    color: #fff;
+    background: var(--night);
+  }
+
+  /* Drenched dark backdrop: looping video, a light blue tint, two drifting glows + a fine grid. */
+  .hero__bg { position: absolute; inset: 0; z-index: -1; overflow: hidden;
+    background: var(--night);
+  }
+  .hero__video { position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; }
+  /* Keep it readable, but let the footage breathe — light tint, heavier only behind the text. */
+  .hero__overlay { position: absolute; inset: 0;
+    background:
+      radial-gradient(120% 100% at 18% 80%, color-mix(in srgb, var(--night) 72%, transparent) 0%, transparent 60%),
+      linear-gradient(160deg, color-mix(in srgb, #05060d 45%, transparent) 0%, color-mix(in srgb, var(--night) 35%, transparent) 100%);
+  }
+  .hero__content { padding-block: clamp(6rem, 14vh, 9rem); position: relative; }
+
+  .hero__eyebrow {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    font-size: 0.875rem; font-weight: 600; letter-spacing: 0.01em;
+    color: color-mix(in srgb, #fff 82%, transparent);
+    padding: 0.45rem 0.9rem 0.45rem 0.7rem;
+    border: 1px solid color-mix(in srgb, #fff 16%, transparent);
+    border-radius: 999px;
+    background: color-mix(in srgb, #fff 5%, transparent);
+    backdrop-filter: blur(6px);
+    margin-bottom: 1.6rem;
+  }
+  .hero__dot { width: 8px; height: 8px; border-radius: 50%; background: #5effa8;
+    box-shadow: 0 0 0 0 color-mix(in srgb, #5effa8 70%, transparent);
+    animation: pulse 2.4s ease-out infinite; }
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 color-mix(in srgb, #5effa8 60%, transparent); }
+    70%, 100% { box-shadow: 0 0 0 7px transparent; }
+  }
+
+  .hero__sub { font-size: var(--step-1); color: color-mix(in srgb, #fff 80%, transparent);
+    max-width: 46ch; margin-top: 1.85rem; line-height: 1.55; }
+  .hero__cta { margin-top: 2.5rem; display: flex; align-items: center; gap: 1rem 2rem; flex-wrap: wrap; }
+
+  /* Roll button: label slides up and out, a second copy enters from the bottom on hover. */
+  .hero__cta-btn {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    padding: 0.95rem 1.5rem 0.95rem 1.8rem; border-radius: 999px;
+    background: var(--accent); color: var(--accent-ink);
+    font-weight: 700; text-decoration: none;
+    box-shadow: var(--shadow-blue);
+    transition: transform 0.18s var(--ease-out), background 0.18s ease, box-shadow 0.18s ease;
+  }
+  .hero__cta-btn:active { transform: scale(0.97); }
+  .hero__cta-roll { position: relative; display: inline-block; overflow: hidden; line-height: 1.25; }
+  .hero__cta-roll span { display: block; transition: transform 0.45s var(--ease-out); }
+  .hero__cta-roll span:last-child { position: absolute; top: 100%; left: 0; }
+  .hero__cta-arrow { transition: transform 0.35s var(--ease-out); }
+  @media (hover: hover) and (pointer: fine) {
+    .hero__cta-btn:hover { background: var(--accent-deep); transform: translateY(-2px);
+      box-shadow: 0 22px 60px -18px color-mix(in srgb, var(--accent) 70%, transparent); }
+    .hero__cta-btn:hover .hero__cta-roll span { transform: translateY(-100%); }
+    .hero__cta-btn:hover .hero__cta-arrow { transform: translateX(4px); }
+  }
+  .hero__link {
+    display: inline-flex; align-items: center; gap: 0.45rem;
+    font-weight: 600; text-decoration: none; color: #fff;
+    transition: color 0.18s ease;
+  }
+  .hero__link span { transition: transform 0.22s var(--ease-out); }
+  .hero__link:hover { color: var(--accent-bright); }
+  .hero__link:hover span { transform: translateX(4px); }
+
+  .hero__trust { margin-top: 2.5rem; font-size: 0.9rem;
+    color: color-mix(in srgb, #fff 55%, transparent); }
+
+  /* Scroll cue */
+  .hero__scroll { position: absolute; left: 50%; bottom: 1.75rem; transform: translateX(-50%);
+    width: 26px; height: 40px; border: 1.5px solid color-mix(in srgb, #fff 30%, transparent);
+    border-radius: 999px; display: grid; place-items: start center; padding-top: 7px; }
+  .hero__scroll span { width: 3px; height: 8px; border-radius: 2px; background: #fff;
+    animation: scrolldot 1.8s var(--ease-out) infinite; }
+  @keyframes scrolldot { 0% { opacity: 0; transform: translateY(-3px); } 40% { opacity: 1; } 80%,100% { opacity: 0; transform: translateY(8px); } }
+  @media (max-width: 640px) { .hero__scroll { display: none; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero__dot, .hero__scroll span { animation: none; }
+    .hero__video { display: none; } /* poster shows via hero__bg fallback */
+  }
 </style>

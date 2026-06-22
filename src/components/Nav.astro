@@ -12,14 +12,90 @@ const links = [
       {links.map((l) => <a href={l.href}>{l.label}</a>)}
       <a class="nav__cta" href="#kontakt">Ta kontakt</a>
     </nav>
+    <details class="nav__mobile">
+      <summary aria-label="Meny"><span></span><span></span><span></span></summary>
+      <nav class="nav__drawer">
+        {links.map((l) => <a href={l.href}>{l.label}</a>)}
+        <a class="nav__cta" href="#kontakt">Ta kontakt</a>
+      </nav>
+    </details>
   </div>
 </header>
+<script>
+  // Close the mobile drawer after picking a link.
+  const menu = document.querySelector(".nav__mobile") as HTMLDetailsElement | null;
+  menu?.querySelectorAll("a").forEach((a) =>
+    a.addEventListener("click", () => menu.removeAttribute("open"))
+  );
+
+  // Header: solidify after leaving the top; hide on scroll-down, reveal on scroll-up.
+  const header = document.querySelector(".nav") as HTMLElement | null;
+  if (header) {
+    let lastY = window.scrollY;
+    let ticking = false;
+    const update = () => {
+      const y = window.scrollY;
+      const goingDown = y > lastY;
+      if (goingDown && y > 0) header.classList.add("is-hidden");
+      else header.classList.remove("is-hidden");
+      // Solidify only when revealed (scrolling up) past the top — never while scrolling down from the top, which caused the white-flash drag.
+      header.classList.toggle("is-scrolled", y > 24 && !goingDown);
+      lastY = y;
+      ticking = false;
+    };
+    addEventListener("scroll", () => {
+      if (!ticking) { requestAnimationFrame(update); ticking = true; }
+    }, { passive: true });
+  }
+</script>
 <style>
-  .nav { position: sticky; top: 0; z-index: 50; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid color-mix(in srgb, var(--ink) 10%, transparent); }
+  /* Clear over the hero; turns white on hover or once scrolled. Hides on scroll-down, returns on scroll-up. */
+  .nav {
+    --nav-ink: #fff;
+    --nav-muted: color-mix(in srgb, #fff 74%, transparent);
+    position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+    color: var(--nav-ink);
+    background: transparent;
+    border-bottom: 1px solid transparent;
+    backdrop-filter: saturate(1.4) blur(0);
+    /* ponytail: don't transition backdrop-filter — animating blur on a fixed el during scroll drags/glitches the header. Snap it instead. */
+    transition: transform 0.4s cubic-bezier(0.22,1,0.36,1), background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+    will-change: transform;
+  }
+  .nav:hover, .nav.is-scrolled {
+    --nav-ink: var(--ink);
+    --nav-muted: var(--muted);
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    border-bottom-color: var(--line);
+    backdrop-filter: saturate(1.4) blur(10px);
+  }
+  .nav.is-hidden { transform: translateY(-100%); }
+  @media (prefers-reduced-motion: reduce) {
+    .nav { transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease; }
+  }
   .nav__inner { display: flex; align-items: center; justify-content: space-between; height: 64px; }
-  .nav__brand { font-weight: 700; letter-spacing: -0.02em; text-decoration: none; }
+  .nav__brand { display: inline-flex; align-items: center; font-weight: 800; letter-spacing: -0.03em; text-decoration: none; font-size: 1.1rem; }
   .nav__links { display: flex; align-items: center; gap: clamp(1rem, 2vw, 1.75rem); }
-  .nav__links a { text-decoration: none; }
-  .nav__cta { background: var(--lime); color: var(--ink); padding: 0.5rem 1rem; border-radius: 999px; font-weight: 700; }
-  @media (max-width: 640px) { .nav__links a:not(.nav__cta) { display: none; } }
+  .nav__links a { text-decoration: none; color: var(--nav-muted); transition: color 0.18s ease; }
+  .nav__links a:hover { color: var(--nav-ink); }
+  .nav a.nav__cta { background: var(--accent); color: var(--accent-ink) !important; padding: 0.5rem 1.05rem; border-radius: 999px; font-weight: 600; transition: transform 0.18s ease, background 0.18s ease; }
+  .nav__cta:hover { background: color-mix(in srgb, var(--accent) 88%, black); transform: translateY(-1px); }
+  .nav__cta:active { transform: scale(0.97); }
+
+  /* Mobile disclosure menu — native <details>, no JS framework */
+  .nav__mobile { display: none; position: relative; }
+  .nav__mobile summary { list-style: none; cursor: pointer; display: flex; flex-direction: column; gap: 5px; padding: 8px 4px; }
+  .nav__mobile summary::-webkit-details-marker { display: none; }
+  .nav__mobile summary span { width: 24px; height: 2px; background: var(--nav-ink); border-radius: 2px; transition: transform 0.2s ease, opacity 0.2s ease; }
+  .nav__mobile[open] summary span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .nav__mobile[open] summary span:nth-child(2) { opacity: 0; }
+  .nav__mobile[open] summary span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+  .nav__drawer { position: absolute; right: 0; top: calc(100% + 12px); display: flex; flex-direction: column; gap: 0.25rem; min-width: 200px; padding: 0.75rem; border-radius: 14px; background: var(--bg); box-shadow: 0 12px 40px -12px color-mix(in srgb, var(--ink) 30%, transparent); border: 1px solid var(--line); }
+  .nav__drawer a { text-decoration: none; padding: 0.6rem 0.75rem; border-radius: 9px; color: var(--ink); }
+  .nav__drawer a:not(.nav__cta):hover { background: var(--surface); }
+  .nav__drawer .nav__cta { text-align: center; margin-top: 0.25rem; }
+  @media (max-width: 640px) {
+    .nav__links { display: none; }
+    .nav__mobile { display: block; }
+  }
 </style>

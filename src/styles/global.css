@@ -1,16 +1,64 @@
 :root {
-  --lime: #C8F169;
-  --ink: #0B1A12;
-  --bg: #FFFFFF;
-  --muted: #5B6660;
-  --container: 1200px;
-  --step-0: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
-  --step-2: clamp(1.5rem, 1.3rem + 1vw, 2rem);
-  --step-5: clamp(2.5rem, 1.6rem + 4.5vw, 5.5rem);
-  --space: clamp(4rem, 3rem + 5vw, 8rem);
+  /* Electric blue carries the brand — now used with conviction, not as a timid accent. */
+  --accent: #1b4dff;        /* electric ultramarine */
+  --accent-deep: #1238d6;   /* pressed / hover */
+  --accent-bright: #5e7bff; /* accent text on dark, legible */
+  --accent-ink: #ffffff;    /* text/icons on accent */
+  --accent-soft: color-mix(in srgb, var(--accent) 8%, white);
+
+  /* Neutrals tinted toward the brand hue — blue-black ink, cool off-white surface. */
+  --ink: #0a0b14;           /* deep blue-black text */
+  --ink-2: #1b1d2a;         /* softer headings */
+  --bg: #ffffff;            /* page */
+  --surface: #f2f3f8;       /* panels, image placeholders */
+  --muted: #54565f;         /* secondary text — ~7:1 on white */
+  --night: #070912;         /* drenched dark sections + hero */
+  --night-2: #0e1330;       /* blue undertone for dark gradients */
+
+  --line: color-mix(in srgb, var(--ink) 12%, transparent); /* hairlines */
+  --line-strong: color-mix(in srgb, var(--ink) 22%, transparent);
+  --on-dark: color-mix(in srgb, #fff 70%, transparent);     /* body text on dark, ~AA */
+
+  --container: 1180px;
+
+  --step-0: clamp(1rem, 0.97rem + 0.18vw, 1.0625rem);
+  --step-1: clamp(1.15rem, 1.05rem + 0.5vw, 1.4rem);
+  --step-2: clamp(1.85rem, 1.3rem + 2.4vw, 3rem);      /* section headings — bolder */
+  --step-4: clamp(2.2rem, 1.5rem + 3vw, 3.75rem);
+  --step-5: clamp(2.6rem, 1.8rem + 3.6vw, 4.5rem);
+  --step-6: clamp(2.9rem, 1.4rem + 6.6vw, 5.75rem);    /* hero display, ≤96px */
+
+  --space: clamp(5rem, 3rem + 7vw, 9.5rem);            /* section rhythm */
+  --radius: 18px;
+  --radius-lg: 28px;
+
+  /* Motion — exponential ease-out, no bounce. */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+
+  /* Elevation — used sparingly. */
+  --shadow: 0 1px 2px color-mix(in srgb, var(--ink) 6%, transparent),
+            0 12px 32px -16px color-mix(in srgb, var(--ink) 30%, transparent);
+  --shadow-blue: 0 18px 50px -20px color-mix(in srgb, var(--accent) 55%, transparent);
+
+  /* Semantic z-index scale. */
+  --z-sticky: 50;
+  --z-modal: 100;
 }
 * { box-sizing: border-box; margin: 0; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; scroll-padding-top: 80px; /* clear the sticky nav on anchor jumps */
+  overscroll-behavior-y: none; /* no rubber-band/pull-to-refresh at the top — native, off main thread */ }
+
+/* Skip link — visible only on keyboard focus */
+.skip-link {
+  position: absolute; left: 1rem; top: -100%; z-index: var(--z-modal);
+  background: var(--ink); color: #fff; font-weight: 700;
+  padding: 0.6rem 1rem; border-radius: 10px; text-decoration: none;
+}
+.skip-link:focus { top: 1rem; }
+
+.display { font-weight: 900; letter-spacing: -0.04em; line-height: 0.95; }
+
 body {
   font-family: "Schibsted Grotesk", system-ui, sans-serif;
   color: var(--ink);
@@ -18,12 +66,29 @@ body {
   font-size: var(--step-0);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 .container { max-width: var(--container); margin-inline: auto; padding-inline: clamp(1.25rem, 5vw, 3rem); }
 section { padding-block: var(--space); }
 a { color: inherit; }
-h1, h2, h3 { line-height: 1.05; font-weight: 700; letter-spacing: -0.02em; }
+h1, h2, h3 { line-height: 1.04; font-weight: 700; letter-spacing: -0.03em; text-wrap: balance; }
+p { text-wrap: pretty; }
+
+/* Eyebrow — one deliberate, named brand device. Used only at major section heads. */
+.eyebrow {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  font-size: 0.8rem; font-weight: 700; letter-spacing: 0.02em;
+  color: var(--accent);
+}
+.eyebrow::before {
+  content: ""; width: 1.4rem; height: 2px; border-radius: 2px;
+  background: currentColor;
+}
+
+/* One accent-driven focus ring everywhere — keyboard users only */
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 3px; }
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+  *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
 }

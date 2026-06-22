@@ -11,15 +11,27 @@ test("homepage loads with correct title and no console errors", async ({ page })
 
 test("nav and footer render", async ({ page }) => {
   await page.goto("/");
-  await expect(page.locator(".nav__brand")).toHaveText("Klar Studio");
-  await expect(page.locator(".nav__cta")).toHaveText("Ta kontakt");
+  await expect(page.locator(".nav__brand")).toContainText("Klar Studio");
+  await expect(page.locator(".nav__links .nav__cta")).toHaveText("Ta kontakt");
   await expect(page.locator(".footer")).toContainText("hei@klarstudio.no");
+});
+
+test("nav hides immediately when scrolling down from the top", async ({ page }) => {
+  await page.goto("/");
+  const nav = page.locator(".nav");
+  await expect(nav).not.toHaveClass(/is-hidden/);
+
+  await page.evaluate(() => window.scrollTo(0, 20));
+  await expect(nav).toHaveClass(/is-hidden/);
+
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await expect(nav).not.toHaveClass(/is-hidden/);
 });
 
 test("hero shows headline and CTA", async ({ page }) => {
   await page.goto("/");
   await expect(page.locator(".hero h1")).toContainText("på nett");
-  await expect(page.locator(".hero__cta a")).toHaveText("Er du klar?");
+  await expect(page.locator(".hero__cta-btn")).toContainText("Er du klar?");
 });
 
 test("services section shows three pillars", async ({ page }) => {
@@ -28,9 +40,10 @@ test("services section shows three pillars", async ({ page }) => {
   await expect(page.locator("#tjenester")).toContainText("Google Maps");
 });
 
-test("why section shows the ranking stat", async ({ page }) => {
+test("why section shows three value points", async ({ page }) => {
   await page.goto("/");
-  await expect(page.locator(".why__num")).toHaveText("#1");
+  await expect(page.locator(".why__point")).toHaveCount(3);
+  await expect(page.locator("#hvorfor")).toContainText("kartet");
 });
 
 test("work section shows featured project and demo badges", async ({ page }) => {

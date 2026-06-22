@@ -3,28 +3,38 @@ const year = new Date().getFullYear();
 ---
 <footer class="footer">
   <div class="container footer__inner">
-    <div>
-      <p class="footer__brand">Klar Studio</p>
+    <div class="footer__brandcol">
+      <p class="footer__brand"><span class="footer__mark" aria-hidden="true"></span>Klar Studio</p>
       <p class="footer__muted">Klar, ferdig — på nett.</p>
     </div>
-    <div class="footer__col">
-      <a href="#tjenester">Tjenester</a>
-      <a href="#arbeid">Arbeid</a>
-      <a href="#kontakt">Kontakt</a>
-    </div>
-    <div class="footer__col">
-      <a href="mailto:hei@klarstudio.no">hei@klarstudio.no</a>
-      <a href="https://instagram.com/klarstudio">Instagram</a>
-    </div>
+    <nav class="footer__nav">
+      <div class="footer__col">
+        <span class="footer__label">Side</span>
+        <a href="#tjenester">Tjenester</a>
+        <a href="#arbeid">Arbeid</a>
+        <a href="#om-oss">Om oss</a>
+      </div>
+      <div class="footer__col">
+        <span class="footer__label">Kontakt</span>
+        <a href="mailto:hei@klarstudio.no">hei@klarstudio.no</a>
+        <a href="https://instagram.com/klarstudio" target="_blank" rel="noopener">Instagram</a>
+      </div>
+    </nav>
   </div>
-  <p class="container footer__legal">© {year} Klar Studio</p>
+  <p class="container footer__legal">© {year} Klar Studio · <a href="/personvern">Personvern</a></p>
 </footer>
 <style>
-  .footer { border-top: 1px solid color-mix(in srgb, var(--ink) 10%, transparent); padding-block: 3rem 2rem; }
-  .footer__inner { display: flex; flex-wrap: wrap; gap: 2rem; justify-content: space-between; }
-  .footer__brand { font-weight: 700; }
-  .footer__muted { color: var(--muted); }
-  .footer__col { display: flex; flex-direction: column; gap: 0.5rem; }
-  .footer__col a { text-decoration: none; }
-  .footer__legal { color: var(--muted); margin-top: 2rem; font-size: 0.875rem; }
+  .footer { background: var(--night); color: #fff; padding-block: clamp(3.5rem, 6vw, 5rem) 2rem; }
+  .footer__inner { display: flex; flex-wrap: wrap; gap: 2.5rem 4rem; justify-content: space-between; }
+  .footer__brand { display: inline-flex; align-items: center; gap: 0.55rem; font-weight: 800; font-size: 1.2rem; letter-spacing: -0.03em; }
+  .footer__mark { width: 13px; height: 13px; border-radius: 4px; background: var(--accent-bright); }
+  .footer__muted { color: color-mix(in srgb, #fff 55%, transparent); margin-top: 0.5rem; }
+  .footer__nav { display: flex; gap: 3rem 4rem; flex-wrap: wrap; }
+  .footer__col { display: flex; flex-direction: column; gap: 0.7rem; }
+  .footer__label { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;
+    color: color-mix(in srgb, #fff 45%, transparent); margin-bottom: 0.2rem; }
+  .footer__col a { text-decoration: none; color: color-mix(in srgb, #fff 75%, transparent); transition: color 0.18s ease; }
+  .footer__col a:hover { color: var(--accent-bright); }
+  .footer__legal { color: color-mix(in srgb, #fff 50%, transparent); margin-top: 3rem; font-size: 0.875rem; }
+  .footer__legal a { color: #fff; text-underline-offset: 3px; }
 </style>

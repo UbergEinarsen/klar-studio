@@ -1,27 +1,123 @@
 ---
 import { processSteps } from "../data/process.ts";
-import Reveal from "./Reveal.tsx";
+import Reveal from "./Reveal.astro";
 ---
-<section id="prosess">
+<section id="prosess" class="process">
   <div class="container">
-    <h2 class="process__title">Slik jobber vi</h2>
-    <div class="process__grid">
+    <div class="process__head">
+      <p class="eyebrow">Slik jobber vi</p>
+      <h2 class="process__title">Tre steg. Klar, ferdig — på nett.</h2>
+    </div>
+    <ol class="process__grid">
+      <span class="process__ball" aria-hidden="true"></span>
       {processSteps.map((s, i) => (
-        <Reveal client:visible delay={i * 0.08}>
-          <article class="process__step">
-            <span class="process__num">{s.step}</span>
+        <Reveal delay={i * 0.1}>
+          <li class="process__step">
+            <span class="process__node" aria-hidden="true">{s.step}</span>
             <h3>{s.title}</h3>
             <p>{s.body}</p>
-          </article>
+          </li>
         </Reveal>
       ))}
-    </div>
+    </ol>
   </div>
 </section>
 <style>
-  .process__title { font-size: var(--step-2); margin-bottom: 2.5rem; }
-  .process__grid { display: grid; gap: 1.5rem; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
-  .process__num { font-weight: 700; color: var(--lime); font-size: 1.5rem; }
-  .process__step h3 { margin: 0.5rem 0; }
-  .process__step p { color: var(--muted); }
+  .process__head { display: flex; flex-direction: column; gap: 1rem; margin-bottom: clamp(2.75rem, 5vw, 4rem); }
+  .process__title { font-size: var(--step-2); }
+
+  .process__grid { list-style: none; padding: 0; display: grid; gap: 2.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); position: relative; }
+  /* Connecting track behind the nodes (desktop). */
+  @media (min-width: 720px) {
+    .process__grid::before { content: ""; position: absolute; top: 27px; left: 27px; right: 27px; height: 2px;
+      background: repeating-linear-gradient(90deg, var(--line-strong) 0 8px, transparent 8px 16px); z-index: 0; }
+  }
+
+  /* Blue ball that rides the track from node to node (positioned by JS). */
+  .process__ball { position: absolute; top: 0; left: 0; width: 16px; height: 16px; border-radius: 50%;
+    background: var(--accent); z-index: 2; opacity: 0; will-change: transform;
+    box-shadow: 0 0 0 5px color-mix(in srgb, var(--accent) 16%, transparent),
+                0 0 18px 3px color-mix(in srgb, var(--accent) 55%, transparent); }
+
+  .process__step { position: relative; z-index: 1; }
+  .process__node { display: inline-grid; place-items: center; width: 54px; height: 54px;
+    border-radius: 50%; background: var(--bg); border: 2px solid var(--ink);
+    font-weight: 800; font-size: 1.05rem; letter-spacing: -0.02em; color: var(--ink);
+    transition: background 0.3s var(--ease-out), color 0.3s var(--ease-out), border-color 0.3s var(--ease-out), transform 0.3s var(--ease-out); }
+  /* Lit when the ball arrives; hover mirrors the same state. */
+  .process__node.is-lit,
+  .process__step:hover .process__node { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); transform: translateY(-3px); }
+  .process__step h3 { margin: 1.1rem 0 0.5rem; font-size: var(--step-1); }
+  .process__step p { color: var(--muted); max-width: 34ch; }
 </style>
+<script>
+  const grid = document.querySelector<HTMLElement>(".process__grid");
+  const ball = grid?.querySelector<HTMLElement>(".process__ball");
+  const nodes = grid ? [...grid.querySelectorAll<HTMLElement>(".process__node")] : [];
+
+  if (grid && ball && nodes.length) {
+    const DWELL = 650, TRAVEL = 850, RETURN = 700; // ms
+    const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
+    const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+
+    // Timeline: dwell on each node, travel between them, then glide back to the first.
+    type Phase = { kind: "dwell"; node: number; dur: number }
+               | { kind: "travel"; from: number; to: number; dur: number };
+    const phases: Phase[] = [];
+    nodes.forEach((_, i) => {
+      phases.push({ kind: "dwell", node: i, dur: DWELL });
+      if (i < nodes.length - 1) phases.push({ kind: "travel", from: i, to: i + 1, dur: TRAVEL });
+    });
+    phases.push({ kind: "travel", from: nodes.length - 1, to: 0, dur: RETURN });
+    const total = phases.reduce((s, p) => s + p.dur, 0);
+
+    let centers: { x: number; y: number }[] = [];
+    const measure = () => {
+      const g = grid.getBoundingClientRect();
+      centers = nodes.map((n) => {
+        const r = n.getBoundingClientRect();
+        return { x: r.left - g.left + r.width / 2, y: r.top - g.top + r.height / 2 };
+      });
+    };
+
+    const desktop = matchMedia("(min-width: 720px)");
+    const reduce = matchMedia("(prefers-reduced-motion: reduce)");
+    let raf = 0, startT = 0;
+
+    const frame = (ts: number) => {
+      if (!startT) startT = ts;
+      let e = (ts - startT) % total;
+      let pos = centers[0], lit = -1;
+      for (const p of phases) {
+        if (e < p.dur) {
+          if (p.kind === "dwell") { pos = centers[p.node]; lit = p.node; }
+          else {
+            const k = easeOut(e / p.dur);
+            pos = { x: lerp(centers[p.from].x, centers[p.to].x, k), y: lerp(centers[p.from].y, centers[p.to].y, k) };
+          }
+          break;
+        }
+        e -= p.dur;
+      }
+      ball.style.transform = `translate(${pos.x}px, ${pos.y}px) translate(-50%, -50%)`;
+      nodes.forEach((n, i) => n.classList.toggle("is-lit", i === lit));
+      raf = requestAnimationFrame(frame);
+    };
+
+    const sync = () => {
+      cancelAnimationFrame(raf);
+      nodes.forEach((n) => n.classList.remove("is-lit"));
+      if (!desktop.matches || reduce.matches) { ball.style.opacity = "0"; return; }
+      measure();
+      ball.style.opacity = "1";
+      startT = 0;
+      raf = requestAnimationFrame(frame);
+    };
+
+    sync();
+    addEventListener("resize", () => { if (desktop.matches && !reduce.matches) measure(); });
+    desktop.addEventListener("change", sync);
+    reduce.addEventListener("change", sync);
+  }
+</script>

@@ -1,27 +1,55 @@
 ---
-import Reveal from "./Reveal.tsx";
+import Reveal from "./Reveal.astro";
+
+const points = [
+  { title: "Øverst på kartet", body: "Vi setter opp og optimaliserer Google-profilen din, så lokale søk lander hos deg — ikke konkurrenten." },
+  { title: "En side som overbeviser", body: "Rask, mobilvennlig og tydelig. Bygget for å gjøre besøkende til kunder, ikke bare se fin ut." },
+  { title: "Lokalt forankret", body: "Vi kjenner nærområdet og snakker språket til kundene dine. Personlig oppfølging, hele veien." },
+];
 ---
 <section id="hvorfor" class="why">
-  <div class="container why__grid">
-    <Reveal client:visible>
-      <h2>Usynlig på nett koster deg kunder.</h2>
-      <p>De fleste velger den første bedriften de finner. Vi sørger for at det er deg — med en nettside som overbeviser og en Google-profil som setter deg øverst.</p>
+  <div class="why__bg" aria-hidden="true"></div>
+  <div class="container why__inner">
+    <Reveal>
+      <p class="eyebrow why__eyebrow">Hvorfor det betyr noe</p>
+      <h2 class="why__headline">Er du usynlig på nett, <span>velger kunden noen andre.</span></h2>
+      <p class="why__lead">De fleste velger den første bedriften de finner. Vi sørger for at det er deg.</p>
     </Reveal>
-    <Reveal client:visible delay={0.1}>
-      <div class="why__stat">
-        <span class="why__num">#1</span>
-        <span class="why__label">på Google Maps i nærområdet</span>
-      </div>
-    </Reveal>
+    <div class="why__points">
+      {points.map((p, i) => (
+        <Reveal delay={0.1 + i * 0.08}>
+          <article class="why__point">
+            <span class="why__index" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
+            <h3>{p.title}</h3>
+            <p>{p.body}</p>
+          </article>
+        </Reveal>
+      ))}
+    </div>
   </div>
 </section>
 <style>
-  .why { background: var(--ink); color: var(--bg); border-radius: 28px; margin-inline: clamp(1rem, 4vw, 2rem); }
-  .why__grid { display: grid; gap: 2.5rem; grid-template-columns: 1fr; align-items: center; }
-  .why h2 { font-size: var(--step-2); }
-  .why p { color: color-mix(in srgb, var(--bg) 75%, transparent); margin-top: 1rem; max-width: 42ch; }
-  .why__stat { display: flex; flex-direction: column; }
-  .why__num { font-size: var(--step-5); font-weight: 700; color: var(--lime); line-height: 1; }
-  .why__label { color: color-mix(in srgb, var(--bg) 75%, transparent); margin-top: 0.5rem; }
-  @media (min-width: 800px) { .why__grid { grid-template-columns: 1.4fr 1fr; } }
+  .why { position: relative; isolation: isolate; color: #fff; background: var(--night);
+    overflow: hidden; padding-block: clamp(4.5rem, 9vw, 8rem); }
+  .why__bg { position: absolute; inset: 0; z-index: -1;
+    background:
+      radial-gradient(80% 120% at 15% 0%, color-mix(in srgb, var(--accent) 26%, transparent) 0%, transparent 55%),
+      linear-gradient(180deg, var(--night-2) 0%, var(--night) 70%);
+  }
+
+  .why__eyebrow { color: var(--accent-bright); }
+  .why__headline { font-size: clamp(2rem, 1.3rem + 3.2vw, 3.4rem); line-height: 1.05;
+    max-width: 18ch; margin-top: 1rem; }
+  .why__headline span { color: color-mix(in srgb, #fff 55%, transparent); }
+  .why__lead { color: color-mix(in srgb, #fff 78%, transparent); max-width: 46ch;
+    margin-top: 1.5rem; font-size: var(--step-1); }
+
+  .why__points { display: grid; gap: 2.25rem 3rem;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    margin-top: clamp(3rem, 6vw, 5rem); }
+  .why__point { border-top: 1px solid color-mix(in srgb, #fff 18%, transparent); padding-top: 1.25rem; }
+  .why__index { display: block; font-weight: 800; font-size: 0.85rem; letter-spacing: 0.06em;
+    color: var(--accent-bright); margin-bottom: 0.85rem; }
+  .why__point h3 { font-size: var(--step-1); margin-bottom: 0.6rem; }
+  .why__point p { color: color-mix(in srgb, #fff 72%, transparent); line-height: 1.6; max-width: 34ch; }
 </style>
